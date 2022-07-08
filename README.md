@@ -22,7 +22,7 @@ This add-on requires DDEV v1.19.3 or higher.
 * Install the DDEV viteserve add-on:
 
 ```shell
-ddev get drud/ddev-viteserve
+ddev get torenware/ddev-viteserve
 ddev restart
 ddev vite-serve start
 ```
