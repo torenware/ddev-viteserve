@@ -1,0 +1,26 @@
+#! /usr/bin/env bash
+
+CMD=$1
+VITE_DIR=${VITE_PROJECT_DIR:=frontend}
+
+CMD=${CMD:=start}
+
+if [ $CMD = start ]; then
+  # make sure node_modules has linux and not mac code:
+  cd $VITE_DIR
+  pnpm install
+
+  # create a background tmux session and tell it to run
+  # our vite script
+  tmux kill-session -t vite-sess 2>/dev/null
+  tmux new -s vite-sess -d
+  tmux send "node node_modules/vite/bin/vite.js --host" C-m
+
+# stopping
+elif [ $CMD = stop ]; then
+  echo "stopping vite"
+  # kill the vite session
+  tmux kill-session -t vite-sess
+else
+  echo "$0 start|stop"
+fi

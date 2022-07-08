@@ -1,0 +1,12 @@
+ARG BASE_IMAGE
+FROM $BASE_IMAGE
+
+# Installing pnpm inside the web-container
+RUN npm install -g pnpm &&\
+  # enable pre/post hooks for pnpm's run-script lifecycle
+  pnpm config set enable-pre-post-script true
+
+# tmux is used to wrap our invocation of the
+# vite dev server.
+RUN apt update; apt install -y tmux
+
