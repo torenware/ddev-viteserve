@@ -1,4 +1,7 @@
-# ddev-viteserve <!-- omit in toc -->
+[![tests](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml/badge.svg)](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
+
+## What is ddev-viteserve?
+
 * [Introduction](#introduction)
 * [Getting Started](#getting-started)
 * [What does this add-on do and add?](#what-does-this-add-on-do-and-add)
@@ -6,7 +9,7 @@
   + [Basic usage](#basic-usage)
 * [TODO](#todo)
 
-## Introduction
+
 
 [ViteJS](https://vitejs.dev/) is an open source javascript build and development tool that does:
 
