@@ -9,12 +9,19 @@
   + [Basic usage](#basic-usage)
 * [TODO](#todo)
 
+<img src="images/vite-log.svg" alt="ViteJS Logo"
+     style="width: 30%" >
 
 
-[ViteJS](https://vitejs.dev/) is an open source javascript build and development tool that does:
+[ViteJS](https://vitejs.dev/) is an open source javascript build and development tool. From their site:
 
-* live reloads of your javascript project
-* handles assets loaded into your web project, including javascript, CSS, and other static assets.
+> Vite (French word for "quick", pronounced /vit/, like "veet") is a build tool that aims to provide a faster and leaner development experience for modern web projects. It consists of two major parts:
+>
+> * A dev server that provides rich feature enhancements over native ES modules, for example extremely fast Hot Module Replacement (HMR).
+>
+> * A build command that bundles your code with Rollup, pre-configured to output highly optimized static assets for production.
+>
+> Vite is opinionated and comes with sensible defaults out of the box, but is also highly extensible via its Plugin API and JavaScript API with full typing support.
 
 This add-on allows you to run[ViteJS](https://vitejs.dev/) through the DDEV web service.
 
