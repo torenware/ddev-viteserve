@@ -2,7 +2,7 @@
 
 ![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
 
-## What is ddev-viteserve?
+## The ddev-viteserve add-on for DDEV
 
 * [Introduction](#introduction)
 * [Getting Started](#getting-started)
@@ -10,6 +10,8 @@
 * [Setting up Vite with this add-on](#setting-up-and-using-this-add-on)
   + [Basic usage](#basic-usage)
 * [TODO](#todo)
+
+## What is ViteJS
 
 <div style="text-align: center; ">
 
