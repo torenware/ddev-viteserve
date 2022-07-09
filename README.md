@@ -1,9 +1,6 @@
-[![tests](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml/badge.svg)](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml)
+[![tests](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml/badge.svg)](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
 
-![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
-
-## The ddev-viteserve add-on for DDEV
-
+# The ddev-viteserve add-on for DDEV
 * [Introduction](#introduction)
 * [Getting Started](#getting-started)
 * [What does this add-on do and add?](#what-does-this-add-on-do-and-add)
@@ -15,7 +12,7 @@
 
 <div style="text-align: center; ">
 
-![Vite Logo](/images/vite-logo.png)
+![Vite Logo](/images/vite-logo.png#center)
 
 </div>
 
@@ -29,7 +26,7 @@
 >
 > Vite is opinionated and comes with sensible defaults out of the box, but is also highly extensible via its Plugin API and JavaScript API with full typing support.
 
-This add-on allows you to run[ViteJS](https://vitejs.dev/) through the DDEV web service.
+This add-on allows you to run [ViteJS](https://vitejs.dev/) through the DDEV web container.
 
 ## Getting Started
 
@@ -85,7 +82,6 @@ hooks:
 
 ## TODO
 
-* tests
-* Github workflow
+* More tests?
 
-**Contributed and maintained by [torenware](https://github.com/torenware)**
+**Contributed and maintained by [Rob Thorne (torenware)](https://github.com/torenware)**
