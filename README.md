@@ -1,4 +1,4 @@
-[![tests](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml/badge.svg)](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml) 
+[![tests](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml/badge.svg)](https://github.com/drud/ddev-addon-template/actions/workflows/tests.yml)
 
 ![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
 
@@ -11,7 +11,11 @@
   + [Basic usage](#basic-usage)
 * [TODO](#todo)
 
-![Vite Logo](/images/vite-log.png)
+<div style="text-align: center; ">
+
+![Vite Logo](/images/vite-logo.png)
+
+</div>
 
 [ViteJS](https://vitejs.dev/) is an open source javascript build and development tool. From their site:
 
