@@ -23,7 +23,7 @@ teardown() {
   set -eu -o pipefail
   cd ${TESTDIR} || (printf "unable to cd to ${TESTDIR}\n" && exit 1)
   ddev delete -Oy ${PROJNAME}
-  #[ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
+  [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
 }
 
 print2log() {
@@ -57,7 +57,8 @@ print2log() {
   cp -r $DIR/tests/testdata/frontend . || exit 1
   # print2log "# try to test if we succeed with mock"
   if ddev vite-serve >/dev/null; then
-    // # print2log "success?"
+    # print2log "success?"
+    echo success
   else
     exit 1
   fi
@@ -70,5 +71,21 @@ print2log() {
   echo "# ddev get drud/ddev-test_vite_serve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get torenware/ddev-viteserve
   ddev restart
-  # ddev exec "curl -s elasticsearch:9200" | grep "${PROJNAME}-elasticsearch"
+
+  # First see if we installed tmux.
+  ddev exec type tmux 2>/dev/null || exit 1
+
+  # trying to start the command should fail since there is no project
+  ddev vite-serve >/dev/null && exit 1
+
+  # mock a js project and see if we succeed.
+  cp -r $DIR/tests/testdata/frontend . || exit 1
+
+  # with the mock this should succeed.
+  if ddev vite-serve >/dev/null; then
+    # print2log "success?"
+    echo success
+  else
+    exit 1
+  fi
 }
