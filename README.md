@@ -65,11 +65,11 @@ npm create vite@latest
 
 ```
 
+* Look in your javascript directory, and edit your Vite configuration. By default, in some configurations for Vite, there will be no configuration file. In that case, Vite will server HTTP on port 3000, which are also this add-on's defaults.  For the add-on to work correctly, it must serve HTTP; we depende upon DDEV to handle HTTPS. If port 3000 causes a conflict with other software you want to use, this is configurable; see below. 
 * [Add a vite integration](https://vitejs.dev/guide/backend-integration.html) to your PHP project, either by manually by adding the needed tags, or [by using a plugin](https://github.com/vitejs/awesome-vite#integrations-with-backends) such as:
   + [Craft Vite](https://github.com/nystudio107/craft-vite)
   + [Laravel Vite](https://github.com/innocenzi/laravel-vite)
   + [wordpress-vite-assets](https://github.com/idleberg/php-wordpress-vite-assets)
-
 * Install ddev-viteserve, and start it up. Vite will serve your content in https using DDEV's generated certificates.
 * If you need to shut vite down,  `ddev viteserve stop` does the thing you want.
 * To get the Vite dev server to start up automatically, add this to your `config.yaml` file, and restart DDEV.
@@ -80,8 +80,12 @@ hooks:
     - exec: .ddev/commands/web/vite-serve
 ```
 
+## Configuration
+
+Most configuration for using this add-on is in Vite's `vite.config.js` file, which will be in the the javascript app directory (`frontend` by default). The key configuration there is `server.port`, which defaults to 3000. You should *not* use the `server.https` key, since DDEV and this add-on expect ViteJS to serve HTTP. The `ddev-viteserve` add-on needs to be consistent with what you set in the "environment" section of `docker-compose.viteserve.yaml`.  
+
 ## TODO
 
-* More tests?
+* Add easier configuration once DDEV knows how to merge `config.*.yaml` files. This is coming "real soon now".
 
 **Contributed and maintained by [Rob Thorne (torenware)](https://github.com/torenware)**
