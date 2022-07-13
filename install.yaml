@@ -1,7 +1,7 @@
 name: ddev-viteserve
 
 pre_install_actions:
-- | 
+- |
   #ddev-nodisplay
   if ! ( ddev debug capabilities 2>/dev/null | grep multiple-dockerfiles >/dev/null 2>&1 ) ; then
     echo "This add-on requires DDEV v1.19.3 or higher, please upgrade." && exit 2
@@ -10,6 +10,7 @@ pre_install_actions:
 project_files:
   - docker-compose.viteserve.yaml
   - web-build/Dockerfile.ddev-viteserve
+  - commands/web/vite-test-listener
 
 
 global_files:

@@ -1,0 +1,17 @@
+#! /usr/bin/env bash
+
+# This is used by viteserve's tests
+# to mock a vite process. It's not
+# part of the public interface of the
+# module
+
+PORT=3000
+
+if nc -zv 127.0.0.1 $PORT &>/dev/null; then
+  # echo "ERROR: Port $PORT is already being used"
+  exit 1
+fi
+
+nohup nc -l $PORT &>/dev/null &
+echo $!
+disown %1

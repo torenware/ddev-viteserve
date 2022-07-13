@@ -10,17 +10,16 @@ setup() {
   cd "${TESTDIR}"
   ddev config --project-name=${PROJNAME}
 
-  # Set up mockserver
-  # export MOCKSERVER_INITIALIZATION_JSON_PATH=fake-vite.json
-  # set +e
-  # curl localhost:3000 &>/dev/null
-  # if [ $? -eq 0 ]; then
-  #   echo "Port 3000 occupied; not starting mockserver"
-  # else
-  #   mockserver -serverPort 3000 &>/dev/null &
-  #   echo $! >mockserver.pid
-  # fi
-  # set -e
+  # Set up a mock listener inside the container
+  set +e
+  curl localhost:3000 &>/dev/null
+  if [ $? -eq 0 ]; then
+    echo "Port 3000 occupied; not starting mock listener"
+  else
+    #mockserver -serverPort 3000 &>/dev/null &
+    ddev exec .ddev/commands/web/vite-test-listener >mockserver.pid
+  fi
+  set -e
 
   # fix the config so we don't clash on ports
   cat >>.ddev/config.yaml <<PORT_UPDATE
@@ -36,10 +35,10 @@ teardown() {
   cd ${TESTDIR} || (printf "unable to cd to ${TESTDIR}\n" && exit 1)
 
   # shut the mockserver down
-  # if [ -f mockserver.pid ]; then
-  #   kill $(cat mockserver.pid)
-  #   rm mockserver.pid
-  # fi
+  if [ -f mockserver.pid ]; then
+    ddev exec kill $(cat mockserver.pid)
+    rm mockserver.pid
+  fi
 
   ddev delete -Oy ${PROJNAME}
   [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
