@@ -34,7 +34,7 @@ if [ $CMD = start ]; then
   # see if the port is actually in use. This will need
   # to use the config variable when we have it; for now,
   # assume the default port of 3000
-  curl -s localhost:3000 &>/dev/null
+  nc -zv 127.0.0.1 3000 &>/dev/null
   if [ $? -eq 0 ]; then
     echo Vite dev server detected on port 3000
   else

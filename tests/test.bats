@@ -12,7 +12,7 @@ setup() {
 
   # Set up a mock listener inside the container
   set +e
-  curl localhost:3000 &>/dev/null
+  nc -zv localhost 3000 &>/dev/null
   if [ $? -eq 0 ]; then
     echo "Port 3000 occupied; not starting mock listener"
   else
