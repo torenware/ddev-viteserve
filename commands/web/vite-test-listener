@@ -12,6 +12,6 @@ if nc -zv 127.0.0.1 $PORT &>/dev/null; then
   exit 1
 fi
 
-nohup nc -l $PORT &>/dev/null &
+nohup nc -lk $PORT &>/dev/null &
 echo $!
 disown %1
