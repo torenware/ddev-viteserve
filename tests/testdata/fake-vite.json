@@ -1,0 +1,10 @@
+[
+  {
+    "httpRequest": {
+      "path": "/"
+    },
+    "httpResponse": {
+      "body": "welcome to fake vite"
+    }
+	}
+]

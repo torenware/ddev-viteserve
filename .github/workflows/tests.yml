@@ -39,7 +39,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Environment setup
       run: |
-        brew install bats-core mkcert
+        brew install bats-core mkcert mockserver
         mkcert -install
 
     - name: Use ddev stable
@@ -62,7 +62,7 @@ jobs:
         mv ddev /usr/local/bin/ddev && chmod +x /usr/local/bin/ddev
 
     - name: Download docker images
-      run: | 
+      run: |
         mkdir junk && pushd junk && ddev config --auto && ddev debug download-images >/dev/null
         docker pull memcached:1.6 >/dev/null
     - name: tmate debugging session

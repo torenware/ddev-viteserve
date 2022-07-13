@@ -10,6 +10,18 @@ setup() {
   cd "${TESTDIR}"
   ddev config --project-name=${PROJNAME}
 
+  # Set up mockserver
+  export MOCKSERVER_INITIALIZATION_JSON_PATH=fake-vite.json
+  set +e
+  curl localhost:3000 &>/dev/null
+  if [ $? -eq 0 ]; then
+    echo "Port 3000 occupied; not starting mockserver"
+  else
+    mockserver -serverPort 3000 &>/dev/null &
+    echo $! >mockserver.pid
+  fi
+  set -e
+
   # fix the config so we don't clash on ports
   cat >>.ddev/config.yaml <<PORT_UPDATE
 router_http_port: "9990"
@@ -22,6 +34,13 @@ PORT_UPDATE
 teardown() {
   set -eu -o pipefail
   cd ${TESTDIR} || (printf "unable to cd to ${TESTDIR}\n" && exit 1)
+
+  # shut the mockserver down
+  if [ -f mockserver.pid ]; then
+    kill $(cat mockserver.pid)
+    rm mockserver.pid
+  fi
+
   ddev delete -Oy ${PROJNAME}
   [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
 }
@@ -32,30 +51,18 @@ print2log() {
 
 @test "install from directory" {
   set -eu -o pipefail
-  # print2log '# Hello, terminal!'
   cd ${TESTDIR}
-  # print2log "# ddev get ${DIR} with project ${PROJNAME} in ${TESTDIR} ($(pwd))"
   ddev get ${DIR}
   ddev restart
-  # Do something here to verify functioning extra service
-  # For extra credit, use a real CMS with actual config.
-  # ddev exec "curl -s elasticsearch:9200" | grep "${PROJNAME}-elasticsearch"
 
   # First see if we installed tmux.
   ddev exec type tmux 2>/dev/null || exit 1
-  # print2log "tmux found"
 
   # trying to start the command should fail since there is no project
-  # print2log "does a lack of front end cause a fail?"
   ddev vite-serve >/dev/null && exit 1
-  # print2log "# No frontend, and vite-server correctly fails to start"
 
   # mock a js project and see if we succeed.
-  # createmockproj
-  # print2log "# cp -r $DIR/tests/testdata/frontend ${TESTDIR}"
-  # print2log "# try to install frontend mock" >&3
   cp -r $DIR/tests/testdata/frontend . || exit 1
-  # print2log "# try to test if we succeed with mock"
   if ddev vite-serve >/dev/null; then
     # print2log "success?"
     echo success
