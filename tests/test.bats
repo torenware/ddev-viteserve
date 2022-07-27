@@ -73,7 +73,9 @@ print2log() {
   # fi
 
   # Install a real project
-  npm create vite@latest my-vue-app -- --template vue
+  set +e
+  npm create vite@latest my-vue-app -- --template vanilla
+  set -e
   if ddev vite-serve >/dev/null; then
     # print2log "success?"
     echo success
