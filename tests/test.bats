@@ -63,15 +63,6 @@ print2log() {
   # trying to start the command should fail since there is no project
   ddev vite-serve && exit 1
 
-  # mock a js project and see if we succeed.
-  # cp -r $DIR/tests/testdata/frontend . || exit 1
-  # if ddev vite-serve >/dev/null; then
-  #   # print2log "success?"
-  #   echo success
-  # else
-  #   exit 1
-  # fi
-
   # Install a real project
   set +e
   npm create vite@latest frontend -- --template vanilla
@@ -85,28 +76,26 @@ print2log() {
 
 }
 
-# comment this out until we've got dir working again
-# @test "install from release" {
-#   set -eu -o pipefail
-#   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
-#   echo "# ddev get drud/ddev-test_vite_serve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
-#   ddev get torenware/ddev-viteserve
-#   ddev restart
+@test "install from release" {
+  set -eu -o pipefail
+  cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
+  echo "# ddev get drud/ddev-test_vite_serve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+  ddev get torenware/ddev-viteserve
+  ddev restart
 
-#   # First see if we installed tmux.
-#   ddev exec type tmux 2>/dev/null || exit 1
+  # First see if we installed tmux.
+  ddev exec type tmux 2>/dev/null || exit 1
 
-#   # trying to start the command should fail since there is no project
-#   ddev vite-serve >/dev/null && exit 1
+  # trying to start the command should fail since there is no project
+  ddev vite-serve && exit 1
 
-#   # mock a js project and see if we succeed.
-#   cp -r $DIR/tests/testdata/frontend . || exit 1
-
-#   # with the mock this should succeed.
-#   if ddev vite-serve >/dev/null; then
-#     # print2log "success?"
-#     echo success
-#   else
-#     exit 1
-#   fi
-# }
+  # Install a real project
+  set +e
+  npm create vite@latest frontend -- --template vanilla
+  set -e
+  if ddev vite-serve; then
+    echo success
+  else
+    exit 1
+  fi
+}
