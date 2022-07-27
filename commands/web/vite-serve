@@ -29,7 +29,7 @@ if [ $CMD = start ]; then
   # our vite script
   tmux kill-session -t vite-sess 2>/dev/null
   tmux new -s vite-sess -d
-  tmux send "node node_modules/vite/bin/vite.js --host" C-m
+  tmux send "node node_modules/vite/bin/vite.js --port $VITE_HTTP_PORT --host" C-m
   echo "Vite now serving $VITE_DIR"
   # give it time to come all the way up.
   sleep 10
@@ -55,5 +55,5 @@ elif [ $CMD = status ]; then
   echo "Vite HTTP Port: $VITE_HTTP_PORT"
   echo "Vite HTTPS Port: $VITE_HTTPS_PORT"
 else
-  echo "$0 start|stop"
+  echo "$0 start|stop|status"
 fi
