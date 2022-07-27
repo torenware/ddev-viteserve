@@ -10,11 +10,13 @@ pre_install_actions:
 project_files:
   - docker-compose.viteserve.yaml
   - web-build/Dockerfile.ddev-viteserve
-  - commands/web/vite-test-listener
-
-
-global_files:
+  - viteserve/vite-test-listener
+  - viteserve/build-dotenv.sh
   - commands/web/vite-serve
+
+
+# global_files:
+#   - commands/web/vite-serve
 
 
 post_install_actions:

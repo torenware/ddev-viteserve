@@ -2,6 +2,7 @@
 
 CMD=$1
 VITE_DIR=${VITE_PROJECT_DIR:=frontend}
+VITE_HTTP_PORT=5173
 
 CMD=${CMD:=start}
 
@@ -34,11 +35,11 @@ if [ $CMD = start ]; then
   # see if the port is actually in use. This will need
   # to use the config variable when we have it; for now,
   # assume the default port of 3000
-  nc -zv 127.0.0.1 3000 &>/dev/null
+  nc -zv 127.0.0.1 $VITE_HTTP_PORT &>/dev/null
   if [ $? -eq 0 ]; then
-    echo Vite dev server detected on port 3000
+    echo "Vite dev server detected on port $VITE_HTTP_PORT"
   else
-    echo "ERROR: Vite server not detected on port 3000"
+    echo "ERROR: Vite server not detected on port $VITE_HTTP_PORT"
   fi
 
 # stopping
