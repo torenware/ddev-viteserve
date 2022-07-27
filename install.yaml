@@ -20,4 +20,6 @@ project_files:
 
 
 post_install_actions:
+  - ddev exec .ddev/viteserve/build-dotenv.sh
+
 

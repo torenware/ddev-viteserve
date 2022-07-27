@@ -3,6 +3,7 @@ setup() {
   VITE_DEV_PORT=5173
   export DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" >/dev/null 2>&1 && pwd)/.."
   echo "DIR is $DIR"
+  export TEST_FILES=$DIR/tests/testdata
   export TESTDIR=~/tmp/test_vite_serve
   mkdir -p $TESTDIR
   export PROJNAME=ddev-viteserve
@@ -53,7 +54,8 @@ print2log() {
 
 @test "install from directory" {
   set -eu -o pipefail
-  cd ${TESTDIR}
+  cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
+  echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get ${DIR}
   ddev restart
 
@@ -74,12 +76,32 @@ print2log() {
     exit 1
   fi
 
+  # Test .env updater
+  if [ -f .ddev/.env ]; then
+    rm .ddev/.env
+  fi
+
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  cmp -s .ddev/.env $TEST_FILES/all-vite.env || exit 1
+
+  # should not change file:
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  cmp -s .ddev/.env $TEST_FILES/all-vite.env || exit 1
+
+  cp $TEST_FILES/other.env .ddev/.env
+
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
+
+  # should not change file
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
 }
 
 @test "install from release" {
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
-  echo "# ddev get drud/ddev-test_vite_serve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+  echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get torenware/ddev-viteserve
   ddev restart
 
