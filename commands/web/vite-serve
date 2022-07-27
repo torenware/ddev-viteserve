@@ -1,8 +1,9 @@
 #! /usr/bin/env bash
 
 CMD=$1
-VITE_DIR=${VITE_PROJECT_DIR:=frontend}
-VITE_HTTP_PORT=5173
+VITE_DIR=${VITE_PROJECT_DIR:-frontend}
+VITE_HTTP_PORT=${VITE_HTTP_PORT:-5173}
+VITE_HTTPS_PORT=${VITE_HTTPS_PORT:-5273}
 
 CMD=${CMD:=start}
 
@@ -47,6 +48,12 @@ elif [ $CMD = stop ]; then
   echo "stopping vite"
   # kill the vite session
   tmux kill-session -t vite-sess
+elif [ $CMD = status ]; then
+  echo "ViteServe Status"
+  echo "================"
+  echo "Project: $VITE_PROJECT_DIR"
+  echo "Vite HTTP Port: $VITE_HTTP_PORT"
+  echo "Vite HTTPS Port: $VITE_HTTPS_PORT"
 else
   echo "$0 start|stop"
 fi
