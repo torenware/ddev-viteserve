@@ -61,7 +61,7 @@ print2log() {
   ddev exec type tmux 2>/dev/null || exit 1
 
   # trying to start the command should fail since there is no project
-  ddev vite-serve >/dev/null && exit 1
+  ddev vite-serve && exit 1
 
   # mock a js project and see if we succeed.
   # cp -r $DIR/tests/testdata/frontend . || exit 1
@@ -76,7 +76,7 @@ print2log() {
   set +e
   npm create vite@latest my-vue-app -- --template vanilla
   set -e
-  if ddev vite-serve >/dev/null; then
+  if ddev vite-serve; then
     # print2log "success?"
     echo success
   else
