@@ -16,13 +16,12 @@ while getopts 'y' flag; do
   esac
 done
 
-
 # @see https://stackoverflow.com/a/27650122/8600734
 mapfile VITE_SETTINGS <<'VITE'
 # start vite
 VITE_PROJECT_DIR=frontend
-VITE_HTTP_PORT=5173
-VITE_HTTPS_PORT=5273
+VITE_PRIMARY_PORT=5173
+VITE_SECONDARY_PORT=5273
 # end vite
 VITE
 
@@ -43,7 +42,7 @@ if [ -f "./.env" ]; then
       replace=y
     fi
     if [ "$replace" == "y" ]; then
-      sed -i.bak  '/^# start vite/,/^\# end vite/d;' .env
+      sed -i.bak '/^# start vite/,/^\# end vite/d;' .env
       printf %s "${VITE_SETTINGS[@]}" >>.env
     else
       echo "Skipping changes to your .env file."

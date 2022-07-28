@@ -2,8 +2,8 @@
 
 CMD=$1
 VITE_DIR=${VITE_PROJECT_DIR:-frontend}
-VITE_HTTP_PORT=${VITE_HTTP_PORT:-5173}
-VITE_HTTPS_PORT=${VITE_HTTPS_PORT:-5273}
+VITE_PRIMARY_PORT=${VITE_PRIMARY_PORT:-5173}
+VITE_SECONDARY_PORT=${VITE_SECONDARY_PORT:-5273}
 
 CMD=${CMD:=start}
 
@@ -29,18 +29,18 @@ if [ $CMD = start ]; then
   # our vite script
   tmux kill-session -t vite-sess 2>/dev/null
   tmux new -s vite-sess -d
-  tmux send "node node_modules/vite/bin/vite.js --port $VITE_HTTP_PORT --host" C-m
+  tmux send "node node_modules/vite/bin/vite.js --port $VITE_PRIMARY_PORT --host" C-m
   echo "Vite now serving $VITE_DIR"
   # give it time to come all the way up.
   sleep 10
   # see if the port is actually in use. This will need
   # to use the config variable when we have it; for now,
   # assume the default port of 3000
-  nc -zv 127.0.0.1 $VITE_HTTP_PORT &>/dev/null
+  nc -zv 127.0.0.1 $VITE_PRIMARY_PORT &>/dev/null
   if [ $? -eq 0 ]; then
-    echo "Vite dev server detected on port $VITE_HTTP_PORT"
+    echo "Vite dev server detected on port $VITE_PRIMARY_PORT"
   else
-    echo "ERROR: Vite server not detected on port $VITE_HTTP_PORT"
+    echo "ERROR: Vite server not detected on port $VITE_PRIMARY_PORT"
   fi
 
 # stopping
@@ -52,8 +52,8 @@ elif [ $CMD = status ]; then
   echo "ViteServe Status"
   echo "================"
   echo "Project: $VITE_PROJECT_DIR"
-  echo "Vite HTTP Port: $VITE_HTTP_PORT"
-  echo "Vite HTTPS Port: $VITE_HTTPS_PORT"
+  echo "Vite HTTP Port: $VITE_PRIMARY_PORT"
+  echo "Vite HTTPS Port: $VITE_SECONDARY_PORT"
 else
   echo "$0 start|stop|status"
 fi

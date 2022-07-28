@@ -1,4 +1,6 @@
-[![tests](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml/badge.svg)](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
+[![tests](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml/badge.svg)](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml)
+
+![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
 
 # The ddev-viteserve add-on for DDEV
 * [Introduction](#introduction)
@@ -49,6 +51,7 @@ and integrate your web application to include the script and link tags Vite expe
 1. Checks to make sure the DDEV version is adequate.
 2. Adds `.ddev/web-build/Dockerfile.ddev-viteserve`.
 3. Adds a `.ddev/docker-compose.viteserve.yaml`, which exposes and routes the ports necessary.
+4. Creates a .env file in the .ddev directory with good default settings. If you already use the .env file features, your settings will be preserved by the installer, and the Vite related settings appended.
 4. Adds a `ddev vite-serve` shell command globally, which lets you easily start and stop when you need it.
 
 ### Basic usage
@@ -65,7 +68,7 @@ npm create vite@latest
 
 ```
 
-* Look in your javascript directory, and edit your Vite configuration. By default, in some configurations for Vite, there will be no configuration file. In that case, Vite will server HTTP on port 3000, which are also this add-on's defaults.  For the add-on to work correctly, it must serve HTTP; we depende upon DDEV to handle HTTPS. If port 3000 causes a conflict with other software you want to use, this is configurable; see below.
+* Look in your javascript directory, and edit your Vite configuration. By default, in some configurations for Vite, there will be no configuration file. In that case, Vite will server HTTP on port 5173 by default, which are also this add-on's defaults.  For the add-on to work correctly, it must serve HTTP; we depende upon DDEV to handle HTTPS. If you're using a Vite 2 project (which defaults to 3000 instead) or have a conflict with other software you want to use, this is configurable; see below.
 * [Add a vite integration](https://vitejs.dev/guide/backend-integration.html) to your PHP project, either by manually by adding the needed tags, or [by using a plugin](https://github.com/vitejs/awesome-vite#integrations-with-backends) such as:
   + [Craft Vite](https://github.com/nystudio107/craft-vite)
   + [Laravel Vite](https://github.com/innocenzi/laravel-vite)
@@ -82,10 +85,18 @@ hooks:
 
 ## Configuration
 
-Most configuration for using this add-on is in Vite's `vite.config.js` file, which will be in the the javascript app directory ( `frontend` by default). The key configuration there is `server.port` , which defaults to 3000. You should *not* use the `server.https` key, since DDEV and this add-on expect ViteJS to serve HTTP. The `ddev-viteserve` add-on needs to be consistent with what you set in the "environment" section of `docker-compose.viteserve.yaml` .
+Most configuration for using this add-on is the .ddev/.env file.  This gets installed when you install the addon, and by default, contains the following environment variables:
 
-## TODO
+```sh
+# start vite
+VITE_PROJECT_DIR=frontend
+VITE_PRIMARY_PORT=5173
+VITE_SECONDARY_PORT=5273
+# end vite
+```
 
-* Add easier configuration once DDEV knows how to merge `config.*.yaml` files. This is coming "real soon now".
+If you delete the .env file, the add-on will still work, and will use the same values you see here as defaults. Unless you make changes to your Vite configuration, these settings will be fine.
+
+The Vite `vite.config.js` file will be in the the javascript app directory ( `frontend` by default). Unless you are doing something unusual, you won't need to change much here. In particular: you should *not* use the `server.https` key, since DDEV and this add-on expect ViteJS to serve HTTP. The `ddev-viteserve` add-on needs to be consistent with what you set in the "environment" section of `docker-compose.viteserve.yaml` .
 
 **Contributed and maintained by [Rob Thorne (torenware)](https://github.com/torenware)**
