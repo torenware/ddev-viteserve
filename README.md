@@ -1,6 +1,4 @@
-[![tests](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml/badge.svg)](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml)
-
-![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
+[![tests](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml/badge.svg)](https://github.com/torenware/ddev-viteserve/actions/workflows/tests.yml) ![project is maintained](https://img.shields.io/maintenance/yes/2022.svg)
 
 # The ddev-viteserve add-on for DDEV
 * [Introduction](#introduction)

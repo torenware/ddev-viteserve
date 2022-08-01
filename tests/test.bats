@@ -76,6 +76,13 @@ print2log() {
     exit 1
   fi
 
+  # # Test the php web server
+  ENDPOINT=$(ddev status -j | jq .raw.services.web.host_http_url | tr -d '"')
+  echo "# Endpoint is $ENDPOINT" >&3
+  # curl $ENDPOINT -o output.html
+  # cat output.html >&3
+  # grep "Vite appears to be listening" output.html || exit 1
+
   # Test .env updater
   if [ -f .ddev/.env ]; then
     rm .ddev/.env
@@ -106,12 +113,14 @@ print2log() {
   ddev restart
 
   # First see if we installed tmux.
+  echo Test for tmux >&3
   ddev exec type tmux 2>/dev/null || exit 1
 
   # trying to start the command should fail since there is no project
   ddev vite-serve && exit 1
 
   # Install a real project
+  echo Install vite project >&3
   set +e
   npm create vite@latest frontend -- --template vanilla
   set -e
@@ -120,4 +129,27 @@ print2log() {
   else
     exit 1
   fi
+  # Test .env updater
+  if [ -f .ddev/.env ]; then
+    rm .ddev/.env
+  fi
+
+  echo "# test .env file handling" >&3
+
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >&3
+  cat .ddev/.env >&3
+  cmp -s .ddev/.env $TEST_FILES/all-vite.env || exit 1
+
+  # should not change file:
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >&3
+  cmp -s .ddev/.env $TEST_FILES/all-vite.env || exit 1
+
+  cp $TEST_FILES/other.env .ddev/.env
+
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/ >&3
+  cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
+
+  # should not change file
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >&3
+  cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
 }
