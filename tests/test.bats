@@ -146,7 +146,7 @@ print2log() {
 
   cp $TEST_FILES/other.env .ddev/.env
 
-  ddev exec .ddev/viteserve/build-dotenv.sh -y >/ >&3
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >&3
   cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
 
   # should not change file
