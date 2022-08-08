@@ -10,6 +10,7 @@ setup() {
   export DDEV_NON_INTERACTIVE=true
   ddev delete -Oy ${PROJNAME} || true
   cd "${TESTDIR}"
+  cp -a $DIR/public .
   ddev config --project-name=${PROJNAME}
 
   # Set up a mock listener inside the container
@@ -28,21 +29,12 @@ router_http_port: "9990"
 router_https_port: "9943"
 PORT_UPDATE
 
-  ddev start
+  ddev start -y
 }
 
 teardown() {
   set -eu -o pipefail
   cd ${TESTDIR} || (printf "unable to cd to ${TESTDIR}\n" && exit 1)
-
-  # We're using a real vite proj now, so tearing down
-  # ddev will take down the project.
-
-  # shut the mockserver down
-  # if [ -f mockserver.pid ]; then
-  #   ddev exec kill $(cat mockserver.pid)
-  #   rm mockserver.pid
-  # fi
 
   ddev delete -Oy ${PROJNAME}
   [ "${TESTDIR}" != "" ] && rm -rf ${TESTDIR}
@@ -60,28 +52,34 @@ print2log() {
   ddev restart
 
   # First see if we installed tmux.
+  echo Test for tmux >&3
   ddev exec type tmux 2>/dev/null || exit 1
 
   # trying to start the command should fail since there is no project
+  echo "Test vite-serve start with no project (should fail)" >&3
   ddev vite-serve && exit 1
 
   # Install a real project
+  echo "Install vanilla project" >&3
   set +e
   npm create vite@latest frontend -- --template vanilla
   set -e
   if ddev vite-serve; then
     # print2log "success?"
-    echo success
+    echo success >&3
   else
+    echo "vite-serve failed!" >&3
     exit 1
   fi
 
   # # Test the php web server
-  ENDPOINT=$(ddev status -j | jq .raw.services.web.host_http_url | tr -d '"')
+  echo "Get URL of project" >&3
+  ENDPOINT=$(ddev status -j | jq .raw.urls[0] | tr -d '"')
   echo "# Endpoint is $ENDPOINT" >&3
-  # curl $ENDPOINT -o output.html
-  # cat output.html >&3
-  # grep "Vite appears to be listening" output.html || exit 1
+  curl -k $ENDPOINT -o output.html
+  # docker logs ddev-router >&3
+  cat output.html >&3
+  grep "Vite appears to be listening" output.html || exit 1
 
   # Test .env updater
   if [ -f .ddev/.env ]; then
@@ -125,10 +123,21 @@ print2log() {
   npm create vite@latest frontend -- --template vanilla
   set -e
   if ddev vite-serve; then
-    echo success
+    echo success >&3
   else
+    echo "vite-serve failed!" >&3
     exit 1
   fi
+
+  # Test the php web server
+  echo "Get URL of project" >&3
+  ENDPOINT=$(ddev status -j | jq .raw.urls[0] | tr -d '"')
+  echo "# Endpoint is $ENDPOINT" >&3
+  curl -k $ENDPOINT -o output.html
+  # docker logs ddev-router >&3
+  cat output.html >&3
+  grep "Vite appears to be listening" output.html || exit 1
+
   # Test .env updater
   if [ -f .ddev/.env ]; then
     rm .ddev/.env
