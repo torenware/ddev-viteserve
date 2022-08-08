@@ -6,7 +6,7 @@
 * [What does this add-on do and add?](#what-does-this-add-on-do-and-add)
 * [Setting up Vite with this add-on](#setting-up-and-using-this-add-on)
   + [Basic usage](#basic-usage)
-* [TODO](#todo)
+* [Configuration](#configuration)
 
 ## What is ViteJS
 

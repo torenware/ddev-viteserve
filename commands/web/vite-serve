@@ -4,6 +4,7 @@ CMD=$1
 VITE_DIR=${VITE_PROJECT_DIR:-frontend}
 VITE_PRIMARY_PORT=${VITE_PRIMARY_PORT:-5173}
 VITE_SECONDARY_PORT=${VITE_SECONDARY_PORT:-5273}
+VITE_JS_PACKAGE_MGR=${VITE_JS_PACKAGE_MGR:-pnpm}
 
 CMD=${CMD:=start}
 
@@ -15,9 +16,14 @@ if [ $CMD = start ]; then
     exit 1
   fi
 
+  if ! command -v $VITE_JS_PACKAGE_MGR >/dev/null; then
+    echo "ERROR: could not find package manager $VITE_JS_PACKAGE_MGR"
+    exit 1
+  fi
+
   # make sure node_modules has linux and not mac code:
   cd $VITE_DIR
-  pnpm install
+  $VITE_JS_PACKAGE_MGR install
 
   # Is js project a Vite project?
   if [ ! -d node_modules/vite ]; then
@@ -31,17 +37,6 @@ if [ $CMD = start ]; then
   tmux new -s vite-sess -d
   tmux send "node node_modules/vite/bin/vite.js --port $VITE_PRIMARY_PORT --host" C-m
   echo "Vite now serving $VITE_DIR"
-  # give it time to come all the way up.
-  sleep 10
-  # see if the port is actually in use. This will need
-  # to use the config variable when we have it; for now,
-  # assume the default port of 3000
-  nc -zv 127.0.0.1 $VITE_PRIMARY_PORT &>/dev/null
-  if [ $? -eq 0 ]; then
-    echo "Vite dev server detected on port $VITE_PRIMARY_PORT"
-  else
-    echo "ERROR: Vite server not detected on port $VITE_PRIMARY_PORT"
-  fi
 
 # stopping
 elif [ $CMD = stop ]; then
