@@ -97,6 +97,10 @@ TYPE_UPDATE
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+
+  # Use pnpm for all these tests
+  export VITE_JS_PACKAGE_MGR=pnpm
+
   ddev get ${DIR}
   echo "# got module from directory" >&3
   ddev restart
@@ -104,9 +108,6 @@ TYPE_UPDATE
   # First see if we installed tmux.
   echo Test for tmux >&3
   ddev exec type tmux 2>/dev/null || exit 1
-
-  # Use pnpm for all these tests
-  export VITE_JS_PACKAGE_MGR=pnpm
 
   # trying to start the command should fail since there is no project
   echo "Test vite-serve start with no project (should fail)" >&3
