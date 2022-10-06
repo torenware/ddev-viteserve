@@ -6,6 +6,24 @@ print_usage() {
   printf "Usage: $0 [-y]"
 }
 
+# https://stackoverflow.com/a/21189044
+function parse_yaml {
+  local prefix=$2
+  local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @ | tr @ '\034')
+  sed -ne "s|^\($s\):|\1|" \
+    -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+    -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p" $1 |
+    awk -F$fs '{
+      indent = length($1)/2;
+      vname[indent] = $2;
+      for (i in vname) {if (i > indent) {delete vname[i]}}
+      if (length($3) > 0) {
+         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+      }
+   }'
+}
+
 while getopts 'y' flag; do
   case "${flag}" in
   y) y_flag='true' ;;
@@ -16,10 +34,22 @@ while getopts 'y' flag; do
   esac
 done
 
+if [ -f .ddev/config.yaml ]; then
+  eval $(parse_yaml .ddev/config.yaml)
+fi
+
+# defaults
+PROJ_DIR=frontend
+
+# check for special cases
+if [ "$type" = "laravel" ]; then
+  PROJ_DIR=.
+fi
+
 # @see https://stackoverflow.com/a/27650122/8600734
-mapfile VITE_SETTINGS <<'VITE'
+mapfile VITE_SETTINGS <<VITE
 # start vite
-VITE_PROJECT_DIR=frontend
+VITE_PROJECT_DIR=$PROJ_DIR
 VITE_PRIMARY_PORT=5173
 VITE_SECONDARY_PORT=5273
 # end vite

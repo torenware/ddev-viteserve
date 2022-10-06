@@ -36,6 +36,30 @@ print2log() {
   echo "$1" >>~/tmp/errlog.log
 }
 
+@test "check laravel proj config" {
+  set -eu -o pipefail
+  cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
+  # change project type
+  cat >>.ddev/config.yaml <<TYPE_UPDATE
+type: laravel
+TYPE_UPDATE
+
+  echo "# laravel project type" >&3
+  echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+  ddev get ${DIR}
+  ddev restart
+
+  # Test .env updater
+  if [ -f .ddev/.env ]; then
+    rm .ddev/.env
+  fi
+
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  echo "# test for laravel specific settings" >&3
+  grep "VITE_PROJECT_DIR=.$" .ddev/.env || (echo "proj dir not reset" && exit 1)
+  echo "# laravel proj type detected successfully" >&3
+}
+
 @test "try using npm as the package manager" {
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
@@ -74,6 +98,7 @@ print2log() {
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get ${DIR}
+  echo "# got module from directory" >&3
   ddev restart
 
   # First see if we installed tmux.
@@ -89,6 +114,7 @@ print2log() {
   set +e
   npm create vite@latest frontend -- --template vanilla
   set -e
+  echo "# js project installed" >&3
   if ddev vite-serve; then
     # print2log "success?"
     echo success >&3

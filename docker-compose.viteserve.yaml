@@ -15,7 +15,7 @@ services:
       - VITE_PROJECT_DIR=${VITE_PROJECT_DIR:-frontend}
       - VITE_PRIMARY_PORT=${VITE_PRIMARY_PORT:-5173}
       - VITE_SECONDARY_PORT=${VITE_SECONDARY_PORT:-5273}
-      - VITE_JS_PACKAGE_MGR=${VITE_JS_PACKAGE_MGR:-pnpm}
+      - VITE_JS_PACKAGE_MGR=${VITE_JS_PACKAGE_MGR}
       # Expose the vite dev server's port (default 5173) here.
       # The odd port swap below is required so we do not need
       # to play with HMR settings due to different internal
