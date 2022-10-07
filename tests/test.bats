@@ -38,6 +38,9 @@ print2log() {
 }
 
 @test "check laravel proj config" {
+  echo "# installing expect utility" >&3
+  brew install expect
+  echo "# expect installed" >&3
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
   # change project type
