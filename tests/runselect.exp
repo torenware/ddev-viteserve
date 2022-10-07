@@ -1,7 +1,7 @@
 #! /usr/bin/env expect
 
 set timeout -1
-spawn "ddev vite-serve"
+spawn ddev vite-serve
 match_max 100000
 expect -exact "1) npm\r
 2) yarn\r
