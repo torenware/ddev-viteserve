@@ -73,9 +73,6 @@ TYPE_UPDATE
   cp * ..
   echo "# js installed at proj root" >&3
 
-  ddev exec expect -v || exit 1
-  echo "# expect is installed" >&3
-
   echo "# call vite-serve with UI" >&3
   eval "run $TEST_FILES/../runselect.exp"
   echo $output >&3
