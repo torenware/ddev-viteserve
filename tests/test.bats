@@ -13,6 +13,7 @@ setup() {
   cd "${TESTDIR}"
   # copy over php proj
   cp -a $DIR/public .
+  # copy over
   ddev config --project-name=${PROJNAME}
 
   # fix the config so we don't clash on ports
@@ -58,6 +59,35 @@ TYPE_UPDATE
   echo "# test for laravel specific settings" >&3
   grep "VITE_PROJECT_DIR=.$" .ddev/.env || (echo "proj dir not reset" && exit 1)
   echo "# laravel proj type detected successfully" >&3
+
+  ddev restart
+
+  # Install a real project
+  echo "# Install vanilla project at project root" >&3
+  set +e
+  npm create vite@latest frontend -- --template vanilla
+  cd frontend
+  cp * ..
+  echo "# js installed at proj root" >&3
+
+  ddev exec expect -v || exit 1
+  echo "# expect is installed" >&3
+
+  echo "# call vite-serve with UI" >&3
+  eval "run $TEST_FILES/../runselect.exp"
+  echo $output >&3
+
+  sleep 10
+
+  # # Test the php web server
+  echo "Get URL of project" >&3
+  ENDPOINT=$(ddev status -j | jq .raw.urls[0] | tr -d '"')
+  echo "# Endpoint is $ENDPOINT" >&3
+  curl -k $ENDPOINT -o output.html
+  # docker logs ddev-router >&3
+  cat output.html >&3
+  grep "Vite appears to be listening" output.html || exit 1
+
 }
 
 @test "try using npm as the package manager" {
