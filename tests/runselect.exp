@@ -1,4 +1,4 @@
-#! /usr/local/bin/expect
+#! /usr/bin/env expect
 
 set timeout -1
 spawn "ddev vite-serve"
