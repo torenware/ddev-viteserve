@@ -13,6 +13,7 @@ setup() {
   cd "${TESTDIR}"
   # copy over php proj
   cp -a $DIR/public .
+  # copy over
   ddev config --project-name=${PROJNAME}
 
   # fix the config so we don't clash on ports
@@ -34,6 +35,59 @@ teardown() {
 
 print2log() {
   echo "$1" >>~/tmp/errlog.log
+}
+
+@test "check laravel proj config" {
+  echo "# installing expect utility" >&3
+  brew install expect
+  echo "# expect installed" >&3
+  set -eu -o pipefail
+  cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
+  # change project type
+  cat >>.ddev/config.yaml <<TYPE_UPDATE
+type: laravel
+TYPE_UPDATE
+
+  echo "# laravel project type" >&3
+  echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+  ddev get ${DIR}
+  ddev restart
+
+  # Test .env updater
+  if [ -f .ddev/.env ]; then
+    rm .ddev/.env
+  fi
+
+  ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  echo "# test for laravel specific settings" >&3
+  grep "VITE_PROJECT_DIR=.$" .ddev/.env || (echo "proj dir not reset" && exit 1)
+  echo "# laravel proj type detected successfully" >&3
+
+  ddev restart
+
+  # Install a real project
+  echo "# Install vanilla project at project root" >&3
+  set +e
+  npm create vite@latest frontend -- --template vanilla
+  cd frontend
+  cp * ..
+  echo "# js installed at proj root" >&3
+
+  echo "# call vite-serve with UI" >&3
+  eval "run $TEST_FILES/../runselect.exp"
+  echo $output >&3
+
+  sleep 10
+
+  # # Test the php web server
+  echo "Get URL of project" >&3
+  ENDPOINT=$(ddev status -j | jq .raw.urls[0] | tr -d '"')
+  echo "# Endpoint is $ENDPOINT" >&3
+  curl -k $ENDPOINT -o output.html
+  # docker logs ddev-router >&3
+  cat output.html >&3
+  grep "Vite appears to be listening" output.html || exit 1
+
 }
 
 @test "try using npm as the package manager" {
@@ -73,7 +127,12 @@ print2log() {
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+
+  # Use pnpm for all these tests
+  export VITE_JS_PACKAGE_MGR=pnpm
+
   ddev get ${DIR}
+  echo "# got module from directory" >&3
   ddev restart
 
   # First see if we installed tmux.
@@ -89,6 +148,7 @@ print2log() {
   set +e
   npm create vite@latest frontend -- --template vanilla
   set -e
+  echo "# js project installed" >&3
   if ddev vite-serve; then
     # print2log "success?"
     echo success >&3
@@ -135,6 +195,10 @@ print2log() {
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
+
+  # Use pnpm for all these tests
+  export VITE_JS_PACKAGE_MGR=pnpm
+
   ddev get torenware/ddev-viteserve
   ddev restart
 

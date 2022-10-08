@@ -16,10 +16,18 @@ while getopts 'y' flag; do
   esac
 done
 
+# defaults
+PROJ_DIR=frontend
+
+# check for special cases
+if [ "$DDEV_PROJECT_TYPE" = "laravel" ]; then
+  PROJ_DIR=.
+fi
+
 # @see https://stackoverflow.com/a/27650122/8600734
-mapfile VITE_SETTINGS <<'VITE'
+mapfile VITE_SETTINGS <<VITE
 # start vite
-VITE_PROJECT_DIR=frontend
+VITE_PROJECT_DIR=$PROJ_DIR
 VITE_PRIMARY_PORT=5173
 VITE_SECONDARY_PORT=5273
 # end vite

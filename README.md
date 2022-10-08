@@ -40,7 +40,7 @@ ddev restart
 ddev vite-serve start
 ```
 
-The new `ddev vite-serve` global command runs the Vite development server from inside the web container. For this to matter, you'll
+The new `ddev vite-serve` command runs the Vite development server from inside the web container. For this to matter, you'll
 need to create your javascript project as a vite-enabled project, 
 and integrate your web application to include the script and link tags Vite expects to enable live loading.
 
@@ -50,7 +50,7 @@ and integrate your web application to include the script and link tags Vite expe
 2. Adds `.ddev/web-build/Dockerfile.ddev-viteserve`.
 3. Adds a `.ddev/docker-compose.viteserve.yaml`, which exposes and routes the ports necessary.
 4. Creates a .env file in the .ddev directory with good default settings. If you already use the .env file features, your settings will be preserved by the installer, and the Vite related settings appended.
-4. Adds a `ddev vite-serve` shell command globally, which lets you easily start and stop when you need it.
+4. Adds a `ddev vite-serve` shell command, which lets you easily start and stop when you need it.
 
 ### Basic usage
 
@@ -66,7 +66,7 @@ npm create vite@latest
 
 ```
 
-* Look in your javascript directory, and edit your Vite configuration. By default, in some configurations for Vite, there will be no configuration file. In that case, Vite will server HTTP on port 5173 by default, which are also this add-on's defaults.  For the add-on to work correctly, it must serve HTTP; we depende upon DDEV to handle HTTPS. If you're using a Vite 2 project (which defaults to 3000 instead) or have a conflict with other software you want to use, this is configurable; see below.
+* Look in your javascript directory, and edit your Vite configuration. By default, in some configurations for Vite, there will be no configuration file. In that case, Vite will server HTTP on port 5173 by default, which are also this add-on's defaults.  For the add-on to work correctly, it must serve HTTP; we depend upon DDEV to handle HTTPS. If you're using a Vite 2 project (which defaults to 3000 instead) or have a conflict with other software you want to use, this is configurable; see below.
 * [Add a vite integration](https://vitejs.dev/guide/backend-integration.html) to your PHP project, either by manually by adding the needed tags, or [by using a plugin](https://github.com/vitejs/awesome-vite#integrations-with-backends) such as:
   + [Craft Vite](https://github.com/nystudio107/craft-vite)
   + [Laravel Vite](https://github.com/innocenzi/laravel-vite)
@@ -92,6 +92,8 @@ VITE_PRIMARY_PORT=5173
 VITE_SECONDARY_PORT=5273
 # end vite
 ```
+
+Viteserve can check what type of ddev project you specified when configuration your project, and may in some cases change these defaults. For example, Laravel projects tend to put its javascript code into the project root; in this case, we set `VITE_PROJECT_DIR=.` [See the FAQ](./FAQ.md) for more details.
 
 If you delete the .env file, the add-on will still work, and will use the same values you see here as defaults. Unless you make changes to your Vite configuration, these settings will be fine.
 
