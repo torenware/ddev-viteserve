@@ -34,15 +34,15 @@ while getopts 'y' flag; do
   esac
 done
 
-if [ -f .ddev/config.yaml ]; then
-  eval $(parse_yaml .ddev/config.yaml)
-fi
+# if [ -f .ddev/config.yaml ]; then
+#   eval $(parse_yaml .ddev/config.yaml)
+# fi
 
 # defaults
 PROJ_DIR=frontend
 
 # check for special cases
-if [ "$type" = "laravel" ]; then
+if [ "$DDEV_PROJECT_TYPE" = "laravel" ]; then
   PROJ_DIR=.
 fi
 

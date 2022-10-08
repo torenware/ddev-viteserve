@@ -9,12 +9,3 @@ expect -exact "1) npm\r
 Choose the package manager to use: "
 send -- "1\r"
 expect eof
-
-
-
-
-
-
-
-
-
