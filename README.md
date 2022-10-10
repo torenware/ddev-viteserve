@@ -47,8 +47,8 @@ and integrate your web application to include the script and link tags Vite expe
 ## What does this add-on do and add?
 
 1. Checks to make sure the DDEV version is adequate.
-2. Adds `.ddev/web-build/Dockerfile.ddev-viteserve`.
-3. Adds a `.ddev/docker-compose.viteserve.yaml`, which exposes and routes the ports necessary.
+2. Adds `.ddev/web-build/Dockerfile.ddev-viteserve`. This installs some packages to make Vite run in background, and to install any additional javascript package managers we currently support.
+3. Adds a `.ddev/docker-compose.viteserve.yaml`, which exposes and routes the ports necessary, and loads some defaults for us.
 4. Creates a .env file in the .ddev directory with good default settings. If you already use the .env file features, your settings will be preserved by the installer, and the Vite related settings appended.
 4. Adds a `ddev vite-serve` shell command, which lets you easily start and stop when you need it.
 
@@ -69,7 +69,7 @@ npm create vite@latest
 * Look in your javascript directory, and edit your Vite configuration. By default, in some configurations for Vite, there will be no configuration file. In that case, Vite will server HTTP on port 5173 by default, which are also this add-on's defaults.  For the add-on to work correctly, it must serve HTTP; we depend upon DDEV to handle HTTPS. If you're using a Vite 2 project (which defaults to 3000 instead) or have a conflict with other software you want to use, this is configurable; see below.
 * [Add a vite integration](https://vitejs.dev/guide/backend-integration.html) to your PHP project, either by manually by adding the needed tags, or [by using a plugin](https://github.com/vitejs/awesome-vite#integrations-with-backends) such as:
   + [Craft Vite](https://github.com/nystudio107/craft-vite)
-  + [Laravel Vite](https://github.com/innocenzi/laravel-vite)
+  + [Official Laravel Vite support](https://laravel.com/docs/9.x/vite)
   + [wordpress-vite-assets](https://github.com/idleberg/php-wordpress-vite-assets)
 * Install ddev-viteserve, and start it up. Vite will serve your content in https using DDEV's generated certificates.
 * If you need to shut vite down,  `ddev viteserve stop` does the thing you want.
