@@ -68,9 +68,11 @@ TYPE_UPDATE
   # Install a real project
   echo "# Install vanilla project at project root" >&3
   set +e
-  npm create vite@latest frontend -- --template vanilla
+  npm create -y vite@latest frontend -- --template vanilla
   cd frontend
   cp * ..
+  set -e
+
   echo "# js installed at proj root" >&3
 
   echo "# call vite-serve with UI" >&3
@@ -100,6 +102,7 @@ TYPE_UPDATE
   echo "# Install vanilla project" >&3
   set +e
   npm create vite@latest frontend -- --template vanilla
+  set -e
 
   echo "# try invalid package manager bun" >&3
   cp $TEST_FILES/use-bun.env .ddev/.env
