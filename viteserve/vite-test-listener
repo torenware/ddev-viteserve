@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+#ddev-generated
 
 # This is used by viteserve's tests
 # to mock a vite process. It's not

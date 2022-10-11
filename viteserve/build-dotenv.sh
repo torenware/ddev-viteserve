@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+#ddev-generated
 
 y_flag=''
 

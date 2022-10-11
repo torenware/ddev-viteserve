@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+#ddev-generated
 
 CMD=$1
 VITE_DIR=${VITE_PROJECT_DIR:-frontend}
@@ -6,35 +7,35 @@ VITE_PRIMARY_PORT=${VITE_PRIMARY_PORT:-5173}
 VITE_SECONDARY_PORT=${VITE_SECONDARY_PORT:-5273}
 
 pmMenu() {
-    PMS="npm yarn pnpm"
+  PMS="npm yarn pnpm"
 
-    PS3="Choose the package manager to use: "
-    select pkgdefault in $PMS; do
-        if [ -n "$pkgdefault" ]; then
-            echo "$pkgdefault"
-            break
-        else
-            echo "'$REPLY' is not a legal entry"
-        fi
-    done
+  PS3="Choose the package manager to use: "
+  select pkgdefault in $PMS; do
+    if [ -n "$pkgdefault" ]; then
+      echo "$pkgdefault"
+      break
+    else
+      echo "'$REPLY' is not a legal entry"
+    fi
+  done
 }
 
 defaultPM() {
 
-    if [ -n "$VITE_JS_PACKAGE_MGR" ]; then
-        echo $VITE_JS_PACKAGE_MGR
-        return
-    fi
+  if [ -n "$VITE_JS_PACKAGE_MGR" ]; then
+    echo $VITE_JS_PACKAGE_MGR
+    return
+  fi
 
-    if [ -f $VITE_DIR/package-lock.json ]; then
-        echo npm
-    elif [ -f $VITE_DIR/yarn.lock ]; then
-        echo yarn
-    elif [ -f $VITE_DIR/pnpm-lock.yaml ]; then
-        echo pnpm
-    else
-        pmMenu
-    fi
+  if [ -f $VITE_DIR/package-lock.json ]; then
+    echo npm
+  elif [ -f $VITE_DIR/yarn.lock ]; then
+    echo yarn
+  elif [ -f $VITE_DIR/pnpm-lock.yaml ]; then
+    echo pnpm
+  else
+    pmMenu
+  fi
 
 }
 
@@ -42,54 +43,54 @@ CMD=${CMD:=start}
 
 if [ $CMD = start ]; then
 
-    # Make sure the project directory is actually there
-    if [ ! -d $VITE_DIR ]; then
-        echo "ERROR: js project directory $VITE_DIR was expected, not found"
-        exit 1
-    fi
+  # Make sure the project directory is actually there
+  if [ ! -d $VITE_DIR ]; then
+    echo "ERROR: js project directory $VITE_DIR was expected, not found"
+    exit 1
+  fi
 
-    VITE_JS_PACKAGE_MGR=$(defaultPM)
-    echo "'$VITE_JS_PACKAGE_MGR'"
+  VITE_JS_PACKAGE_MGR=$(defaultPM)
+  echo "'$VITE_JS_PACKAGE_MGR'"
 
-    if ! command -v $VITE_JS_PACKAGE_MGR >/dev/null; then
-        echo "ERROR: could not find package manager $VITE_JS_PACKAGE_MGR"
-        exit 1
-    fi
+  if ! command -v $VITE_JS_PACKAGE_MGR >/dev/null; then
+    echo "ERROR: could not find package manager $VITE_JS_PACKAGE_MGR"
+    exit 1
+  fi
 
-    echo "Using package manager $VITE_JS_PACKAGE_MGR"
+  echo "Using package manager $VITE_JS_PACKAGE_MGR"
 
-    # make sure node_modules has linux and not mac code:
-    cd $VITE_DIR
-    $VITE_JS_PACKAGE_MGR install
+  # make sure node_modules has linux and not mac code:
+  cd $VITE_DIR
+  $VITE_JS_PACKAGE_MGR install
 
-    # Is js project a Vite project?
-    if [ ! -d node_modules/vite ]; then
-        echo "ERROR: project in $VITE_DIR does not appear to be Vite-enabled"
-        exit 1
-    fi
+  # Is js project a Vite project?
+  if [ ! -d node_modules/vite ]; then
+    echo "ERROR: project in $VITE_DIR does not appear to be Vite-enabled"
+    exit 1
+  fi
 
-    # create a background tmux session and tell it to run
-    # our vite script
-    tmux kill-session -t vite-sess 2>/dev/null
-    tmux new -s vite-sess -d
-    tmux send "node node_modules/vite/bin/vite.js --port $VITE_PRIMARY_PORT --host" C-m
-    echo "Vite now serving $VITE_DIR"
+  # create a background tmux session and tell it to run
+  # our vite script
+  tmux kill-session -t vite-sess 2>/dev/null
+  tmux new -s vite-sess -d
+  tmux send "node node_modules/vite/bin/vite.js --port $VITE_PRIMARY_PORT --host" C-m
+  echo "Vite now serving $VITE_DIR"
 
 # stopping
 elif [ $CMD = stop ]; then
-    echo "stopping vite"
-    # kill the vite session
-    tmux kill-session -t vite-sess
+  echo "stopping vite"
+  # kill the vite session
+  tmux kill-session -t vite-sess
 
 # show settings
 elif [ $CMD = status ]; then
-    echo "ViteServe Status"
-    echo "================"
-    echo "Project: $VITE_PROJECT_DIR"
-    echo "Vite Primary Port: $VITE_PRIMARY_PORT"
-    echo "Vite Secondary Port: $VITE_SECONDARY_PORT"
+  echo "ViteServe Status"
+  echo "================"
+  echo "Project: $VITE_PROJECT_DIR"
+  echo "Vite Primary Port: $VITE_PRIMARY_PORT"
+  echo "Vite Secondary Port: $VITE_SECONDARY_PORT"
 
 # usage
 else
-    echo "$0 start|stop|status"
+  echo "$0 start|stop|status"
 fi
