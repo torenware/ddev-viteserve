@@ -6,20 +6,72 @@ pre_install_actions:
   if ! ( ddev debug capabilities 2>/dev/null | grep multiple-dockerfiles >/dev/null 2>&1 ) ; then
     echo "This add-on requires DDEV v1.19.3 or higher, please upgrade." && exit 2
   fi
+- |
+  #ddev-nodisplay
+  echo "pre-upgrade for older versions of add-on:"
+  if [ -f $HOME/.ddev/command/web/vite-serve ]; then
+    rm $HOME/.ddev/command/web/vite-serve
+  fi
+  for file in \
+    docker-compose.viteserve.yaml \
+    web-build/Dockerfile.ddev-viteserve \
+    viteserve/vite-test-listener \
+    viteserve/build-dotenv.sh \
+    commands/web/vite-serve; do
+      if [ -f $file ]; then
+        if ! grep "#ddev-generated" $file; then
+          echo "remove old style file $file"
+          rm $file
+        fi
+      fi
+    done
 
 project_files:
   - docker-compose.viteserve.yaml
   - web-build/Dockerfile.ddev-viteserve
   - viteserve/vite-test-listener
   - viteserve/build-dotenv.sh
+  - viteserve/build-dotenv1.sh
+  - viteserve/build-dotenv2.sh
+  - viteserve/build-dotenv3.sh
   - commands/web/vite-serve
 
-
-# global_files:
-#   - commands/web/vite-serve
-
-
 post_install_actions:
-  - ddev exec .ddev/viteserve/build-dotenv.sh
+- ddev exec .ddev/viteserve/build-dotenv1.sh
+- ddev exec .ddev/viteserve/build-dotenv2.sh
+- ddev exec .ddev/viteserve/build-dotenv3.sh
+
+# post_install_actions:
+#   - ddev exec .ddev/viteserve/build-dotenv.sh
+#   - |
+#     #ddev-nodisplay
+#     # cd .ddev
+#     if [ -f .allow-upgrade ]; then
+#       if grep ask .allow-upgrade >/dev/null ; then
+#         read replace
+#         if [ "$replace" = "y" ]; then
+#           echo "true" >.allow-upgrade
+#         else
+#           echo "false" >.allow-upgrade
+#         fi
+#       fi
+#     fi
+#   - |
+#     #ddev-nodisplay
+#     # cd .ddev
+#     if [ -f .allow-upgrade ]; then
+#       if grep "true" .allow-upgrade >/dev/null ; then
+#         if [ -f .env ]; then
+#           sed -i.bak '/^# start vite/,/^\# end vite/d;' .env
+#           cat .env-frag >>.env
+#           echo ".env updated to:"
+#           cat .env
+#         else
+#           cp .env-frag .env
+#         fi
+#         rm .env-frag
+#       fi
+#     fi
+
 
 

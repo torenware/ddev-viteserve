@@ -177,21 +177,29 @@ TYPE_UPDATE
     rm .ddev/.env
   fi
 
+  echo "# build default .env" >&3
   ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  echo "# build done" >&3
+  cat .ddev/.env >&3
+  echo "# end of .env"
   cmp -s .ddev/.env $TEST_FILES/all-vite.env || exit 1
 
   # should not change file:
+  echo "# repeat build (should be idenpotent)" >&3
   ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
+  cat .ddev/.env >&3
   cmp -s .ddev/.env $TEST_FILES/all-vite.env || exit 1
 
   cp $TEST_FILES/other.env .ddev/.env
 
+  echo "# build .env with merge" >&3
   ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
-  cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
+  cat .ddev/.env >&3
+  cmp -l .ddev/.env $TEST_FILES/other-vite.env >&3 || exit 1
 
   # should not change file
   ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
-  cmp -s .ddev/.env $TEST_FILES/other-vite.env || exit 1
+  cmp -l .ddev/.env $TEST_FILES/other-vite.env >&3 || exit 1
 }
 
 @test "install from release" {
