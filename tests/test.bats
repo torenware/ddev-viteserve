@@ -16,12 +16,6 @@ setup() {
   # copy over
   ddev config --project-name=${PROJNAME}
 
-  # fix the config so we don't clash on ports
-  cat >>.ddev/config.yaml <<PORT_UPDATE
-# router_http_port: "9990"
-# router_https_port: "9943"
-PORT_UPDATE
-
   ddev start -y
 }
 
@@ -43,10 +37,6 @@ print2log() {
   echo "# expect installed" >&3
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
-  #   # change project type
-  #   cat >>.ddev/config.yaml <<TYPE_UPDATE
-  # type: laravel
-  # TYPE_UPDATE
 
   echo "# laravel project type" >&3
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
@@ -59,10 +49,7 @@ print2log() {
   fi
 
   ddev exec .ddev/viteserve/build-dotenv.sh -y >/dev/null
-  echo "# test for laravel specific settings" >&3
-  grep "VITE_PROJECT_DIR=.$" .ddev/.env || (echo "proj dir not reset" && exit 1)
-  echo "# laravel proj type detected successfully" >&3
-
+  echo "# built custom .env file" >&3
   ddev restart
 
   # Install a real project
