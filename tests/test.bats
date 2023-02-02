@@ -18,8 +18,8 @@ setup() {
 
   # fix the config so we don't clash on ports
   cat >>.ddev/config.yaml <<PORT_UPDATE
-router_http_port: "9990"
-router_https_port: "9943"
+# router_http_port: "9990"
+# router_https_port: "9943"
 PORT_UPDATE
 
   ddev start -y
