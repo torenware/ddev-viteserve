@@ -43,10 +43,10 @@ print2log() {
   echo "# expect installed" >&3
   set -eu -o pipefail
   cd ${TESTDIR} || (echo "unable to cd to ${TESTDIR}\n" && exit 1)
-  # change project type
-  cat >>.ddev/config.yaml <<TYPE_UPDATE
-type: laravel
-TYPE_UPDATE
+  #   # change project type
+  #   cat >>.ddev/config.yaml <<TYPE_UPDATE
+  # type: laravel
+  # TYPE_UPDATE
 
   echo "# laravel project type" >&3
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
