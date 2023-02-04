@@ -41,6 +41,7 @@ print2log() {
   echo "# laravel project type" >&3
   echo "# ddev get torenware/ddev-viteserve with project ${PROJNAME} in ${TESTDIR} ($(pwd))" >&3
   ddev get ${DIR}
+  type yq >&3
   echo "# config file:" >&3
   cat .ddev/config.yaml >&3
   echo "# eof config.yaml" >&3
