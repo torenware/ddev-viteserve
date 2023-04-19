@@ -3,12 +3,13 @@ name: ddev-viteserve
 pre_install_actions:
 - |
   #ddev-nodisplay
+  #ddev-description:Check DDEV version
   if ! ( ddev debug capabilities 2>/dev/null | grep multiple-dockerfiles >/dev/null 2>&1 ) ; then
     echo "This add-on requires DDEV v1.19.3 or higher, please upgrade." && exit 2
   fi
 - |
   #ddev-nodisplay
-  echo "pre-upgrade for older versions of add-on:"
+  #ddev-description:Pre-upgrade for older versions of add-on
   if [ -f $HOME/.ddev/command/web/vite-serve ]; then
     rm $HOME/.ddev/command/web/vite-serve
   fi
@@ -37,9 +38,15 @@ project_files:
   - commands/web/vite-serve
 
 post_install_actions:
-- ddev exec .ddev/viteserve/build-dotenv1.sh
-- ddev exec .ddev/viteserve/build-dotenv2.sh
-- ddev exec .ddev/viteserve/build-dotenv3.sh
+- |
+  #ddev-description:Run build-dotenv1.sh
+  ddev exec .ddev/viteserve/build-dotenv1.sh
+- |
+  #ddev-description:Run build-dotenv2.sh
+  ddev exec .ddev/viteserve/build-dotenv2.sh
+- |
+  #ddev-description:Run build-dotenv3.sh
+  ddev exec .ddev/viteserve/build-dotenv3.sh
 
 # post_install_actions:
 #   - ddev exec .ddev/viteserve/build-dotenv.sh
