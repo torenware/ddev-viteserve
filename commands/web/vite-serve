@@ -74,6 +74,14 @@ if [ $CMD = start ]; then
   tmux kill-session -t vite-sess 2>/dev/null
   tmux new -s vite-sess -d
   tmux send "node node_modules/vite/bin/vite.js --port $VITE_PRIMARY_PORT --host" C-m
+
+  # Show DDEV info
+  echo ""
+  echo "DDEV Info:"
+  echo "Project Type: $DDEV_PROJECT_TYPE"
+  echo "Url: $DDEV_PRIMARY_URL"
+  echo ""
+
   echo "Vite now serving $VITE_DIR"
 
 # stopping
