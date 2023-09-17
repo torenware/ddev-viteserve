@@ -90,6 +90,7 @@ Most configuration for using this add-on is the .ddev/.env file.  This gets inst
 VITE_PROJECT_DIR=frontend
 VITE_PRIMARY_PORT=5173
 VITE_SECONDARY_PORT=5273
+VITE_JS_PACKAGE_MGR=yarn
 # end vite
 ```
 
